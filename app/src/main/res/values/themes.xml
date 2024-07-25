@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.QR" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Здесь вы можете добавить собственные настройки темы -->
+    </style>
+</resources>
