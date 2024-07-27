@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -61,7 +62,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.appcompat)
     implementation("com.journeyapps:zxing-android-embedded:4.3.0") // Или последняя версия
-    implementation("com.google.zxing:core:3.4.1") // Или последняя версия
+    implementation("com.google.zxing:core:3.4.1")
+    implementation(libs.firebase.config) // Или последняя версия
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

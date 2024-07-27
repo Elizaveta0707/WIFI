@@ -5,13 +5,80 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.net.wifi.ScanResult
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import com.google.firebase.FirebaseApp
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var remoteConfig: FirebaseRemoteConfig
+    private lateinit var featureStatusTextView: TextView
+    private lateinit var refreshButton: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        // Инициализация Firebase
+        FirebaseApp.initializeApp(this)
+
+        // Получаем экземпляр FirebaseRemoteConfig
+        remoteConfig = FirebaseRemoteConfig.getInstance()
+
+        // Связываем элементы интерфейса
+        featureStatusTextView = findViewById(R.id.featureStatusTextView)
+        refreshButton = findViewById(R.id.refreshButton)
+
+        // Устанавливаем настройки Remote Config
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setMinimumFetchIntervalInSeconds(5) //  на 5 секунд для тестирования
+            .build()
+        remoteConfig.setConfigSettingsAsync(configSettings)
+
+        // Убираем установку значений по умолчанию
+
+        // Получаем параметры при запуске
+        fetchAndActivateConfig()
+
+        // Обработчик нажатия на кнопку
+        refreshButton.setOnClickListener {
+            fetchAndActivateConfig()
+        }
+    }
+
+    private fun fetchAndActivateConfig() {
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.i("MainActivity", "Fetch successful, last flag: ${task.result}")
+                    updateFeatureStatus()
+                } else {
+                    Log.e("MainActivity", "Fetch failed: ${task.exception?.message}")
+                }
+            }
+    }
+
+    private fun updateFeatureStatus() {
+        val featureToggle = remoteConfig.getBoolean("flag")
+        Log.i("MainActivity", "Flag  value: $featureToggle")
+
+        // Обновляем текст в TextView
+        featureStatusTextView.text = if (featureToggle) {
+            Log.i("MainActivity", "Flag true!")
+            "Flag true!"
+        } else {
+            Log.i("MainActivity", "Flag false!")
+            "Flag false!"
+        }
+    }
+
+
+    /*
     private lateinit var wifiScanner: WiFiScanner
     private lateinit var scanResultsTextView: TextView
 
@@ -60,5 +127,5 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 101
-    }
+    }*/
 }

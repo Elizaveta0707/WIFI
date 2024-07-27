@@ -3,15 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/featureStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Feature status will appear here"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"
+        android:padding="16dp"/>
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:layout_below="@id/featureStatusTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+    <!-- для WIFIScanner
     <Button
         android:id="@+id/startScanButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Start Scan" />
+        android:text="Start"
+        android:layout_below="@id/startScanButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
     <TextView
         android:id="@+id/scanResultsTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp" />
+        android:textSize="18sp"
+        android:layout_centerInParent="true"
+        android:padding="16dp"/>-->
 </RelativeLayout>
