@@ -1,4 +1,5 @@
 package com.example.qr
+import android.content.Context
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,6 +17,55 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
 class MainActivity : AppCompatActivity() {
+
+    private companion object {
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1
+    }
+
+    private lateinit var scanner: GSMScanner
+    private lateinit var resultTextView: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        scanner = GSMScanner(this)
+        resultTextView = findViewById(R.id.scanResultsTextView)
+
+        val scanButton: Button = findViewById(R.id.startScanButton)
+        scanButton.setOnClickListener { startScanning() }
+    }
+
+    private fun startScanning() {
+        Log.d("MainActivity", "Start scanning button clicked.")
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        } else {
+            scanGsmCells()
+        }
+    }
+
+    private fun scanGsmCells() {
+        scanner.scanCells { result ->
+            runOnUiThread {
+                resultTextView.text = result
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                scanGsmCells()
+            } else {
+                Log.d("MainActivity", "Location permission denied.")
+                resultTextView.text = "Location permission denied."
+            }
+        }
+    }
+    /*
+    FireBase
     private lateinit var remoteConfig: FirebaseRemoteConfig
     private lateinit var featureStatusTextView: TextView
     private lateinit var refreshButton: Button
@@ -76,9 +126,10 @@ class MainActivity : AppCompatActivity() {
             "Flag false!"
         }
     }
-
+*/
 
     /*
+    WIFIScanner
     private lateinit var wifiScanner: WiFiScanner
     private lateinit var scanResultsTextView: TextView
 
